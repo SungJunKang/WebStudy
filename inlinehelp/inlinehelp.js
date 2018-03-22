@@ -1,77 +1,36 @@
-$(function(){
+$(function() {
   var options = {
-    helperClass:"help_dialog"
+    helperClass: "help_dialog"
   }
 
   displayHelpers(options);
 });
 
-function displayHelpers(options){
-  if(options != null){
+function displayHelpers(options) {
+  if (options != null) {
     setIconTo(options['icon']);
     setHelperClassTo(options['helper_class']);
-  }
-  else{
+  } else {
     setIconTo();
     setHelperClassTo();
   }
-  $("a.help_link").each(function(index, element){
-    if($(element).attr("id") == ""){
+
+  $("a.help_link").each(function(index, element) {
+    if ($(element).attr("id") == "") {
       $(element).attr("id", randomString());
     }
     appendHelpTo(element);
   });
-  $("a.help_link").click(function(){
+  $("a.help_link").click(function() {
     displayHelpFor(this);
     return false;
   });
 }
 
-function setIconTo(helpicon){
-  isImage = /jpg|jpeg|png|gif$/
-  if(helpicon == undefined){
-    icon = "[?]";
-  }
-  else if(isImage.test(helpicon)){
-    icon = "<img src='"+helpicon"'>";
-  }
-  else {
-    icon = helpIcon;
-  }
-}
-
-function setHelperClassTo(className){
-  if(className == undefined){
-    helperClass = "help_dialog";
-  }
-  else {
-    helperClass = className;
-  }
-}
-
-$("a.help_link").each(function(index, element){
-  if($(element).attr("id") == ""){
-    $(element).attr("id", randomString());
-  }
-  appendHelpTo(element);
-});
-
-function randomString(){
-  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  var stringLength = 8;
-  var randomstring = '';
-  for(var i = 0; i < stringLength; i++){
-    var rnum = Math.floor(Math.random() * chars.length);
-    randomstring += chars.substring(rnum, rnum + 1);
-  }
-  return randomstring;
-}
-
-function appendHelpTo(element){
-  if($(element).attr("title") != undefined){
+function appendHelpTo(element) {
+  if ($(element).attr("title") != undefined) {
     title = $(element).attr("title");
-  }
-  else {
+  } else {
     title = $(element).html();
   }
   var helperDiv = document.createElement('div');
@@ -84,50 +43,30 @@ function appendHelpTo(element){
   $(element).html(icon);
 }
 
-$("a.help_link").click(function(){
-  displayHelpFor(this);
-  return false;
-});
-
-function displayHelpFor(element){
+function displayHelpFor(element) {
   url = $(element).attr("href");
   helpTextElement = "#" + $(element).attr("id") + "_" + $(element).attr("data-style");
-  if($(helpTextElement).html() == ""){
+  if ($(helpTextElement).html() == "") {
     $.get(url, {},
-    function(data){
-      $(helpTextElement).html(data);
-      if($(element).attr("data-style") == "dialog"){
-        activateDialogFor(element, $(element).attr("data-modal"));
-      }
-      toggleDisplayOf(helpTextElement);
-    });
-  }
-  else {
+      function(data) {
+        $(helpTextElement).html(data);
+        if ($(element).attr("data-style") == "dialog") {
+          activateDialogFor(element, $(element).attr("data-modal"));
+        }
+        toggleDisplayOf(helpTextElement);
+      });
+  } else {
     toggleDisplayOf(helpTextElement);
   }
 }
 
-function activateDialogFor(element, modal){
-  var dialogOptions = {
-    autoOpen: false;
-  }
-  if(modal == "true"){
-    dialogOptions = {
-      modal: true,
-      draggable: false,
-      autoOpen: false
-    };
-  }
-  $("#" + $(element).attr("id") + "_dialog").dialog(dialogOptions);
-}
-
-function toggleDisplayOf(element){
-  switch(displayMethodOf(element)){
+function toggleDisplayOf(element) {
+  switch (displayMethodOf(element)) {
     case "dialog":
-      if($(element).dialog('isOpen')){
+      if ($(element).dialog('isOpen')) {
         $(element).dialog('close');
       }
-      else{
+      else {
         $(element).dialog('open');
       }
       break;
@@ -139,13 +78,56 @@ function toggleDisplayOf(element){
   }
 }
 
-function displayMethodOf(element){
+function displayMethodOf(element) {
   helperClassRegex = new RegExp(" " + helperClass);
-  if($(element).hasClass("dialog")){
+  if ($(element).hasClass("dialog")) {
     displayMethod = "dialog";
-  }
-  else{
+  } else {
     displayMethod = $(element).attr("class").replace(helperClassRegex, "");
   }
   return displayMethod;
+}
+
+function activateDialogFor(element, modal) {
+  var dialogOptions = {
+    autoOpen: false
+  };
+  if (modal == "true") {
+    dialogOptions = {
+      modal: true,
+      draggable: false,
+      autoOpen: false
+    };
+  }
+  $("#" + $(element).attr("id") + "_dialog").dialog(dialogOptions);
+}
+
+function setIconTo(helpIcon) {
+  isImage = /jpg|jpeg|png|gif$/
+  if (helpIcon == undefined) {
+    icon = "[?]";
+  } else if (isImage.test(helpIcon)) {
+    icon = "<img src='" + helpIcon + "'>";
+  } else {
+    icon = helpIcon;
+  }
+}
+
+function setHelperClassTo(className) {
+  if (className == undefined) {
+    helperClass = "help_dialog";
+  } else {
+    helperClass = className;
+  }
+}
+
+function randomString() {
+  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+  var stringLength = 8;
+  var randomstring = '';
+  for (var i = 0; i < stringLength; i++) {
+    var rnum = Math.floor(Math.random() * chars.length);
+    randomstring += chars.substring(rnum, rnum + 1);
+  }
+  return randomstring;
 }
