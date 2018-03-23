@@ -8,6 +8,7 @@
     $(function() {
       $('#new-product-form').submit(function() {
         var newProductForm = $(this);
+        alert(newProductForm.attr("action"));
         $.ajax({
           method: "post",
           url: newProductForm.attr("action") + ".json",
@@ -40,7 +41,7 @@
 </head>
 
 <body>
-  <form id="new_product_form" action="" method="post">
+  <form id="new_product_form" action="/" method="post">
     <label>First name</label>
     <input type="text" name="fname" value="Mickey" />
     <label>Last name</label>
